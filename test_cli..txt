@@ -1,0 +1,45 @@
+Here's how you can test the code:
+
+    Save the modified script to a file, say script.sh.
+    Create a sample config.cfg file with some values for the parameters. For example:
+
+makefile
+
+username="john"
+vault_env="dev"
+app_env="qa"
+vault_key="my_key"
+filename="data.txt"
+file_path="/tmp"
+b64_string="dGhpcyBpcyBhIHRlc3Q="
+
+    Open a terminal and navigate to the directory containing script.sh and config.cfg.
+    Run the script with some or all of the parameters passed as command line arguments, like this:
+
+shell
+
+$ ./script.sh -u alice -v prod -k secret -b dGVzdA== -f data.txt -p /home/alice
+
+This will set the values of username, vault_env, vault_key, b64_string, filename, and file_path to the specified values, and leave app_env unset. The values of the parameters will be printed at the end of the script.
+
+    Run the script without any command line arguments to use the values from config.cfg, like this:
+
+shell
+
+$ ./script.sh
+
+This will set the values of the parameters to the values in config.cfg, and print them at the end of the script.
+
+    Test the behavior when mandatory parameters are missing, by commenting out one of the parameter values in config.cfg and running the script again. For example, if you comment out the vault_env parameter like this:
+
+makefile
+
+username="john"
+#vault_env="dev"
+app_env="qa"
+vault_key="my_key"
+filename="data.txt"
+file_path="/tmp"
+b64_string="dGhpcyBpcyBhIHRlc3Q="
+
+and run the script, you should see an error message indicating that the vault_env parameter is missing.
