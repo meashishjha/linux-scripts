@@ -1,63 +1,99 @@
-coming soon
+#!/bin/bash
 
-import pwd
+# Set the variables for role ID and secret ID
+ROLE_ID="your_role_id"
+SECRET_ID="your_secret_id"
 
-def get_user_home(username):
-    try:
-        user_info = pwd.getpwnam(username)
-        home_directory = user_info.pw_dir
-        print(f"Username: {username}\tHome Directory: {home_directory}")
-    except KeyError:
-        print(f"User '{username}' not found.")
-
-# Example usage
-target_username = "john"
-get_user_home(target_username)
+# Authenticate with Vault and retrieve the client token
+AUTH_RESPONSE=$(curl --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
+  https://your-vault-url/v1/auth/approle/login)
+CLIENT_TOKEN=$(echo "$
 
 
-===========================
 
-import subprocess
+==============================
 
-def get_user_home(username):
-    try:
-        command = f"grep '^{username}:' /etc/passwd | cut -d':' -f6"
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate()
+#!/bin/bash
 
-        if output:
-            home_directory = output.decode().strip()
-            print(f"Username: {username}\tHome Directory: {home_directory}")
-        else:
-            print(f"User '{username}' not found.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred: {e.stderr}")
+# Set the variables for role ID and secret ID
+ROLE_ID="your_role_id"
+SECRET_ID="your_secret_id"
 
-# Example usage
-target_username = "john"
-get_user_home(target_username)
-=================================
+# Authenticate with Vault and retrieve the client token
+AUTH_RESPONSE=$(curl --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
+  https://your-vault-url/v1/auth/approle/login)
+CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | jq -r '.auth.client_token')
 
-import subprocess
+# Fetch secret data using the client token
+SECRET_RESPONSE=$(curl --header "X-Vault-Token: $CLIENT_TOKEN" \
+  https://your-vault-url/v1/secret/data/your_secret_path)
+SECRET_DATA=$(echo "$SECRET_RESPONSE" | jq -r '.data.data')
 
-def fetch_environment_variables():
-    try:
-        command = "printenv"
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        output, error = process.communicate()
+# Display the secret data
+echo "$SECRET_DATA"
+====================
 
-        if output:
-            env_variables = output.decode().splitlines()
-            env_dict = {}
-            for variable in env_variables:
-                key, value = variable.split("=", 1)
-                env_dict[key] = value
-            return env_dict
-        else:
-            print("No environment variables found.")
-    except subprocess.CalledProcessError as e:
-        print(f"Error occurred: {e.stderr}")
+#!/bin/bash
 
-# Example usage
-environment_vars = fetch_environment_variables()
-print(environment_vars)
+# Set the variables for role ID and secret ID
+ROLE_ID="your_role_id"
+SECRET_ID="your_secret_id"
+
+# Authenticate with Vault and retrieve the client token
+AUTH_RESPONSE=$(curl --silent --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
+  https://your-vault-url/v1/auth/approle/login)
+CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | sed -n 's/.*"client_token":"\([^"]*\)".*/\1/p')
+
+# Fetch secret data using the client token
+SECRET_RESPONSE=$(curl --silent --header "X-Vault-Token: $CLIENT_TOKEN" \
+  https://your-vault-url/v1/secret/data/your_secret_path)
+SECRET_DATA=$(echo "$SECRET_RESPONSE" | sed -n 's/.*"data":{"data":\([^}]*\)}.*/\1/p')
+
+# Display the secret data
+echo "$SECRET_DATA"
+
+
+
+
+=========================
+#!/bin/bash
+
+# Set the variables for role ID and secret ID
+ROLE_ID="your_role_id"
+SECRET_ID="your_secret_id"
+
+# Authenticate with Vault and retrieve the client token
+AUTH_RESPONSE=$(curl --silent --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
+  https://your-vault-url/v1/auth/approle/login)
+CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | awk -F'"' '{print $10}')
+
+# Fetch secret data using the client token
+SECRET_RESPONSE=$(curl --silent --header "X-Vault-Token: $CLIENT_TOKEN" \
+  https://your-vault-url/v1/secret/data/your_secret_path)
+SECRET_DATA=$(echo "$SECRET_RESPONSE" | awk -F'"' '{print $12}')
+
+# Display the secret data
+echo "$SECRET_DATA"
+
+
+
+==============================
+
+#!/bin/bash
+
+# Set the variables for role ID and secret ID
+ROLE_ID="your_role_id"
+SECRET_ID="your_secret_id"
+
+# Authenticate with Vault and retrieve the client token
+AUTH_RESPONSE=$(curl --silent --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
+  https://your-vault-url/v1/auth/approle/login)
+CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | grep -o '"client_token":"[^"]*' | cut -d'"' -f4)
+
+# Fetch secret data using the client token
+SECRET_RESPONSE=$(curl --silent --header "X-Vault-Token: $CLIENT_TOKEN" \
+  https://your-vault-url/v1/secret/data/your_secret_path)
+SECRET_DATA=$(echo "$SECRET_RESPONSE" | grep -o '"data":{"data":{"[^}]*' | cut -d'"' -f8)
+
+# Display the secret data
+echo "$SECRET_DATA"
