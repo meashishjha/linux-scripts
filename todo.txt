@@ -161,6 +161,52 @@ os.system('crontab temp_cron')
 os.remove('temp_cron')
 
 
+==============================
+import urllib.request
+import zipfile
+
+# URL of the file to download
+url = "https://example.com/archive.zip"  # Replace with the actual URL of the file
+
+# Path to save the downloaded file
+file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
+
+# Download the file
+urllib.request.urlretrieve(url, file_path)
+
+# Extract the downloaded file
+with zipfile.ZipFile(file_path, 'r') as zip_ref:
+    zip_ref.extractall("/path/to/extract")  # Replace with the desired extraction location
+
+
+=================================================
+
+import urllib.request
+import shutil
+import os
+import zipfile
+
+# URL of the file to download
+url = "https://example.com/archive.zip"  # Replace with the actual URL of the file
+
+# Path to save the downloaded file
+file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
+
+# Path to extract the downloaded file
+extract_path = "/path/to/extract"  # Replace with the desired extraction location
+
+# Download the file
+with urllib.request.urlopen(url) as response, open(file_path, 'wb') as out_file:
+    shutil.copyfileobj(response, out_file)
+
+# Extract the downloaded file
+with zipfile.ZipFile(file_path, 'r') as zip_ref:
+    zip_ref.extractall(extract_path)
+
+# Remove the downloaded zip file
+os.remove(file_path)
+
+
 
 
 
