@@ -207,6 +207,103 @@ with zipfile.ZipFile(file_path, 'r') as zip_ref:
 os.remove(file_path)
 
 
+===============================
+import urllib.request
+import os
+import zipfile
+
+# Artifactory URL and authentication credentials
+artifactory_url = "https://example.com/artifactory/repo/archive.zip"  # Replace with the actual Artifactory URL
+username = "your_username"  # Replace with your Artifactory username
+password = "your_password"  # Replace with your Artifactory password
+
+# Path to save the downloaded file
+file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
+
+# Path to extract the downloaded file
+extract_path = "/path/to/extract"  # Replace with the desired extraction location
+
+# Create a password manager and add credentials
+password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+password_mgr.add_password(None, artifactory_url, username, password)
+
+# Create a handler with the password manager
+handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
+
+# Create an opener with the handler
+opener = urllib.request.build_opener(handler)
+
+# Install the opener
+urllib.request.install_opener(opener)
+
+# Download the file
+urllib.request.urlretrieve(artifactory_url, file_path)
+
+# Extract the downloaded file
+with zipfile.ZipFile(file_path, 'r') as zip_ref:
+    zip_ref.extractall(extract_path)
+
+# Remove the downloaded zip file
+os.remove(file_path)
+
+
+=============================
+
+import urllib.request
+import os
+import zipfile
+
+# Artifactory URL and access token
+artifactory_url = "https://example.com/artifactory/repo/archive.zip"  # Replace with the actual Artifactory URL
+access_token = "your_access_token"  # Replace with your Artifactory access token
+
+# Path to save the downloaded file
+file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
+
+# Path to extract the downloaded file
+extract_path = "/path/to/extract"  # Replace with the desired extraction location
+
+# Create a password manager with the access token
+password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+password_mgr.add_password(None, artifactory_url, access_token, "")
+
+# Create a handler with the password manager
+handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
+
+# Create an opener with the handler
+opener = urllib.request.build_opener(handler)
+
+# Install the opener
+urllib.request.install_opener(opener)
+
+# Download the file
+urllib.request.urlretrieve(artifactory_url, file_path)
+
+# Extract the downloaded file
+with zipfile.ZipFile(file_path, 'r') as zip_ref:
+    zip_ref.extractall(extract_path)
+
+# Remove the downloaded zip file
+os.remove(file_path)
+
+
+
+========================
+
+
+To obtain an access token for JFrog Artifactory, you can follow these steps:
+
+    Open your JFrog Artifactory instance in a web browser.
+    Log in to your Artifactory account with appropriate credentials.
+    Once logged in, navigate to your user profile or account settings.
+    Look for an option related to "API Keys" or "Access Tokens". The specific location may vary depending on the Artifactory version and configuration.
+    Generate a new access token by providing a name or description for the token.
+    Customize the token's permissions or scopes based on your requirements. For example, you may grant read-only or read-write access to specific repositories or actions.
+    Save or copy the generated access token. Note that some systems only display the token once, so make sure to store it securely.
+
+Once you have obtained the access token, you can use it in your Python code for authentication with the JFrog Artifactory, as shown in the previous examples. Replace the "your_access_token" placeholder with your actual access token in the code.
+
+
 
 
 
