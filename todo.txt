@@ -305,6 +305,38 @@ Once you have obtained the access token, you can use it in your Python code for 
 
 
 
+import os
+import urllib3
+import zipfile
+
+def download_and_extract(url, destination_folder):
+    # Create the destination folder if it doesn't exist
+    if not os.path.exists(destination_folder):
+        os.makedirs(destination_folder)
+
+    # Set up the urllib3 PoolManager
+    http = urllib3.PoolManager()
+
+    # Download the file
+    file_name = os.path.join(destination_folder, url.split("/")[-1])
+    with http.request("GET", url, preload_content=False) as response, open(file_name, "wb") as out_file:
+        out_file.write(response.data)
+
+    # Extract the contents of the downloaded file
+    with zipfile.ZipFile(file_name, "r") as zip_ref:
+        zip_ref.extractall(destination_folder)
+
+    # Remove the downloaded zip file
+    os.remove(file_name)
+
+# Example usage:
+url = "https://example.com/archive.zip"
+destination_folder = "/path/to/folder"
+
+download_and_extract(url, destination_folder)
+
+
+
 
 
 
