@@ -337,6 +337,89 @@ download_and_extract(url, destination_folder)
 
 
 
+===========================
+def check_crontab_entry(cron_entry):
+    try:
+        with open('/tmp/crontab_temp', 'w') as temp_file:
+            # Save the current user's crontab to a temporary file
+            os.system('crontab -l > /tmp/crontab_temp')
+
+        with open('/tmp/crontab_temp', 'r') as temp_file:
+            for line in temp_file:
+                if cron_entry in line:
+                    return True
+        return False
+    except FileNotFoundError:
+        return False
+
+def add_crontab_entry(cron_entry):
+    with open('/tmp/crontab_temp', 'a') as temp_file:
+        temp_file.write(cron_entry + '\n')
+
+    # Update the user's crontab with the temporary file
+    os.system('crontab /tmp/crontab_temp')
+
+def main():
+    # Define the cron entry to add
+    cron_entry = "@reboot supervisord -c /path/to/supervisord.conf"
+
+    # Check if the entry already exists in the crontab
+    entry_exists = check_crontab_entry(cron_entry)
+
+    if entry_exists:
+        print("Cron entry already exists. No changes needed.")
+    else:
+        # Append the cron entry to the temporary crontab file
+        add_crontab_entry(cron_entry)
+        print("Cron entry added successfully.")
+
+if __name__ == "__main__":
+    import os
+    main()
+
+
+====================================
+def check_crontab_entry(cron_entry):
+    try:
+        with open('/tmp/crontab_temp', 'w') as temp_file:
+            # Save the current user's crontab to a temporary file
+            subprocess.run('crontab -l', stdout=temp_file, shell=True)
+
+        with open('/tmp/crontab_temp', 'r') as temp_file:
+            for line in temp_file:
+                if cron_entry in line:
+                    return True
+        return False
+    except FileNotFoundError:
+        return False
+
+def add_crontab_entry(cron_entry):
+    with open('/tmp/crontab_temp', 'a') as temp_file:
+        temp_file.write(cron_entry + '\n')
+
+    # Update the user's crontab with the temporary file
+    subprocess.run('crontab /tmp/crontab_temp', shell=True)
+
+def main():
+    # Define the cron entry to add
+    cron_entry = "@reboot supervisord -c /path/to/supervisord.conf"
+
+    # Check if the entry already exists in the crontab
+    entry_exists = check_crontab_entry(cron_entry)
+
+    if entry_exists:
+        print("Cron entry already exists. No changes needed.")
+    else:
+        # Append the cron entry to the temporary crontab file
+        add_crontab_entry(cron_entry)
+        print("Cron entry added successfully.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
 
 
 
