@@ -418,6 +418,115 @@ if __name__ == "__main__":
     main()
 
 
+--------------------------------------------
+
+def read_text_file(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        return [line.strip() for line in lines if line.strip() != '']
+
+def remove_entries_from_list(source_list, removal_list):
+    return [entry for entry in source_list if entry not in removal_list]
+
+def add_entries_to_list(source_list, entry_list):
+    return source_list + [entry for entry in entry_list if entry not in source_list]
+
+def write_list_to_file(file_path, data_list):
+    with open(file_path, 'w') as file:
+        file.write('\n'.join(data_list))
+
+def main():
+    # Define the file paths and lists
+    input_file_path = 'input.txt'
+    output_file_path = 'output.txt'
+    cron_entry = ['entry1', 'entry2', 'entry3']  # Replace with your cron_entry list
+    cron_entry_removal = ['entry2', 'entry4']    # Replace with your cron_entry_removal list
+
+    # Step 1: Read the text file and create the initial list
+    file_list = read_text_file(input_file_path)
+
+    # Step 2: Remove entries from file_list if they exist in cron_entry_removal
+    file_list = remove_entries_from_list(file_list, cron_entry_removal)
+
+    # Step 3: Add entries from cron_entry to file_list if they don't already exist
+    file_list = add_entries_to_list(file_list, cron_entry)
+
+    # Step 4: Write the updated file_list to a new file
+    write_list_to_file(output_file_path, file_list)
+
+if __name__ == "__main__":
+    main()
+
+
+--------------------------------------------
+
+def read_text_file(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        return {line.strip() for line in lines if line.strip() != ''}
+
+def write_list_to_file(file_path, data_set):
+    with open(file_path, 'w') as file:
+        file.write('\n'.join(data_set))
+
+def main():
+    # Define the file paths and sets
+    input_file_path = 'input.txt'
+    output_file_path = 'output.txt'
+    cron_entry = {'entry1', 'entry2', 'entry3'}  # Replace with your cron_entry set
+    cron_entry_removal = {'entry2', 'entry4'}    # Replace with your cron_entry_removal set
+
+    # Step 1: Read the text file and create the initial set
+    file_set = read_text_file(input_file_path)
+
+    # Step 2: Remove entries from file_set if they exist in cron_entry_removal
+    file_set -= cron_entry_removal
+
+    # Step 3: Add entries from cron_entry to file_set if they don't already exist
+    file_set |= cron_entry
+
+    # Step 4: Write the updated file_set to a new file
+    write_list_to_file(output_file_path, file_set)
+
+if __name__ == "__main__":
+    main()
+
+--------------------------------------------
+
+def read_text_file(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        return {line.strip() for line in lines if line.strip() != ''}
+
+def write_list_to_file(file_path, data_set):
+    with open(file_path, 'w') as file:
+        file.write('\n'.join(data_set))
+
+def main():
+    # Define the file paths and sets
+    input_file_path = 'input.txt'
+    output_file_path = 'output.txt'
+    cron_entry = {'entry1', 'entry2', 'entry3'}  # Replace with your cron_entry set
+    cron_entry_removal = {'entry2', 'entry4'}    # Replace with your cron_entry_removal set
+
+    # Step 1: Read the text file and create the initial set
+    file_set = read_text_file(input_file_path)
+
+    # Step 2: Remove entries from file_set if they exist in cron_entry_removal
+    file_set -= cron_entry_removal
+
+    # Step 3: Add entries from cron_entry to file_set if they don't already exist
+    file_set |= cron_entry
+
+    # Step 4: Write the updated file_set to a new file
+    write_list_to_file(output_file_path, file_set)
+
+if __name__ == "__main__":
+    main()
+
+
+---------------------------------------------
+
 
 
 
