@@ -527,6 +527,71 @@ if __name__ == "__main__":
 
 ---------------------------------------------
 
+*****************************************************************
+import subprocess
+
+def execute_and_log_command(command):
+    try:
+        # Execute the command and capture the output and errors
+        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        
+        # Log the command output and errors
+        with open('command_log.txt', 'a') as log_file:
+            log_file.write(f"Command: {command}\n")
+            log_file.write(f"Exit Code: {result.returncode}\n")
+            log_file.write(f"Output:\n{result.stdout}\n")
+            log_file.write(f"Errors:\n{result.stderr}\n")
+            log_file.write('=' * 50 + '\n')
+
+        return result.returncode, result.stdout, result.stderr
+    except Exception as e:
+        return -1, None, str(e)
+
+# Define the system command to execute
+command = "ps -ef -u edapi | grep python | grep udafdbi | awk '{print $2}' | xargs kill -9"
+
+# Execute the command and log the output
+exit_code, stdout, stderr = execute_and_log_command(command)
+
+if exit_code == 0:
+    print("Command executed successfully!")
+else:
+    print("Command execution failed. Check the log for details.")
+
+
+---------------------------------------
+
+import subprocess
+
+def execute_and_print_command(command):
+    try:
+        # Execute the command and capture the output
+        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        
+        # Print the command output
+        print("Command Output:")
+        print(result.stdout)
+        
+        if result.returncode == 0:
+            print("Command executed successfully!")
+        else:
+            print("Command execution failed.")
+        
+        # Print any errors
+        if result.stderr:
+            print("Errors:")
+            print(result.stderr)
+            
+    except Exception as e:
+        print("An error occurred:", str(e))
+
+# Define the system command to execute
+command = "ps -ef -u edapi | grep python | grep udafdbi | awk '{print $2}' | xargs kill -9"
+
+# Execute the command and print the output
+execute_and_print_command(command)
+
+
 
 
 
