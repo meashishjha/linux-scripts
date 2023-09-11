@@ -597,7 +597,36 @@ execute_and_print_command(command)
 
 
 
+import json
 
+# Specify the path to the JSON file
+json_file_path = r'C:\WORK\Lang\Python\CodePractise\Python\config\config.json'
+
+# Read JSON data from the file
+with open(json_file_path, 'r') as json_file:
+    config_data = json.load(json_file)
+
+# Access and print the values
+key1_value = config_data['key1']
+key2_value = config_data['key2']
+key3_name = config_data['key3']['name']
+key3_email = config_data['key3']['email']
+key3 = config_data['key3']
+
+print("Key1:", key1_value)
+print("Key2:", key2_value)
+print("Key3 - Name:", key3_name)
+print("Key3 - Email:", key3_email)
+print(key3)
+
+{
+    "key1": "value1",
+    "key2": ["value2"],
+    "key3": {
+        "name": "ash",
+        "email": "ash@g.com"
+    }
+}
 
 
 
