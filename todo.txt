@@ -630,3 +630,28 @@ print(key3)
 
 
 
+Slide 2: Key Concepts
+
+Title: Fundamentals of REST and SQLAlchemy
+
+In this section, we'll lay the foundation by understanding the key concepts of REST (Representational State Transfer) and SQLAlchemy, which form the backbone of our journey into building powerful Python REST APIs.
+
+Understanding REST:
+
+    REST, or Representational State Transfer, is an architectural style for designing networked applications.
+    It emphasizes stateless communication, resource-based interactions, and the use of standard HTTP methods (GET, POST, PUT, DELETE).
+    RESTful APIs are built around resources, each uniquely identified by a URL.
+
+The Role of SQLAlchemy:
+
+    SQLAlchemy is a Python library that serves as an Object-Relational Mapping (ORM) tool.
+    It bridges the gap between object-oriented programming and relational databases.
+    With SQLAlchemy, we work with databases using Python classes and objects, making database interactions more intuitive and efficient.
+
+Why These Concepts Matter:
+
+    A strong grasp of REST principles is essential for designing APIs that are intuitive, scalable, and easy to maintain.
+    SQLAlchemy empowers us to work with databases in a Pythonic way, making it an indispensable tool for modern web development.
+
+
+
