@@ -682,4 +682,44 @@ Concluding Thoughts:
 In the subsequent sections of this presentation, we will delve deeper into Python, SQLAlchemy, and practical implementation of REST APIs to showcase the power and versatility of this approach.
 
 
+from collections import defaultdict
+
+def merge_products_and_offerings(product_json, offer_json):
+    # Create a dictionary to store products and their corresponding offerings
+    product_offerings = defaultdict(list)
+
+    # Populate the dictionary with products from product_json
+    for product in product_json:
+        product_id_key = next((key for key in product if key.lower() == 'product_id'), None)
+        if product_id_key:
+            product_id = product[product_id_key]
+            product_offerings[product_id].append(product)
+
+ 
+    
+    # Merge offerings from offer_json into the dictionary
+    for offer in offer_json:
+        product_id_key = next((key for key in offer if key.lower() == 'product_id'), None)
+        if product_id_key:
+            product_id = offer[product_id_key]
+            product = product_offerings.get(product_id)
+            if product is not None:
+                product[0].setdefault('offerings', []).append({
+                    key: offer[key] for key in offer if key.lower() in ['product_id', 'offering_id', 'name', 'description', 'alias', 'product_alias']
+                })
+
+    print(product_offerings)
+    
+    # Convert the dictionary values to a list to get the final_output
+    final_output = []
+    for products in product_offerings.values():
+        final_product = products[0].copy()
+        final_product.setdefault('offerings', [])
+        for product in products:
+            final_product['offerings'].extend(product.get('offerings', []))
+        final_output.append(final_product)
+
+    return final_output
+
+
 
