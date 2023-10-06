@@ -723,3 +723,32 @@ def merge_products_and_offerings(product_json, offer_json):
 
 
 
+from collections import defaultdict
+
+def merge_products_and_offerings(product_json, offer_json):
+    # Create a dictionary to store products and their corresponding offerings
+    product_offerings = defaultdict(list)
+
+    # Merge products from product_json
+    for product in product_json:
+        product_id = product.get('product_id', None)
+        if product_id:
+            product_offerings[product_id].append(product)
+
+    # Merge offerings from offer_json
+    for offer in offer_json:
+        product_id = offer.get('product_id', None)
+        if product_id:
+            product_offerings[product_id][0].setdefault('offerings', []).append({
+                key: value for key, value in offer.items() if key.lower() in ['product_id', 'offering_id', 'name', 'description', 'alias', 'product_alias']
+            })
+
+    # Convert the dictionary values to a list to get the final_output
+    final_output = [
+        {**product[0], 'offerings': product[0].get('offerings', [])}
+        for product in product_offerings.values()
+    ]
+
+    return final_output
+
+# Rest of the code remains the same
