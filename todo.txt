@@ -1,754 +1,136 @@
-#!/bin/bash
-
-# Set the variables for role ID and secret ID
-ROLE_ID="your_role_id"
-SECRET_ID="your_secret_id"
-
-# Authenticate with Vault and retrieve the client token
-AUTH_RESPONSE=$(curl --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
-  https://your-vault-url/v1/auth/approle/login)
-CLIENT_TOKEN=$(echo "$
-
-
-
-==============================
-
-#!/bin/bash
-
-# Set the variables for role ID and secret ID
-ROLE_ID="your_role_id"
-SECRET_ID="your_secret_id"
-
-# Authenticate with Vault and retrieve the client token
-AUTH_RESPONSE=$(curl --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
-  https://your-vault-url/v1/auth/approle/login)
-CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | jq -r '.auth.client_token')
-
-# Fetch secret data using the client token
-SECRET_RESPONSE=$(curl --header "X-Vault-Token: $CLIENT_TOKEN" \
-  https://your-vault-url/v1/secret/data/your_secret_path)
-SECRET_DATA=$(echo "$SECRET_RESPONSE" | jq -r '.data.data')
-
-# Display the secret data
-echo "$SECRET_DATA"
-====================
-
-#!/bin/bash
-
-# Set the variables for role ID and secret ID
-ROLE_ID="your_role_id"
-SECRET_ID="your_secret_id"
-
-# Authenticate with Vault and retrieve the client token
-AUTH_RESPONSE=$(curl --silent --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
-  https://your-vault-url/v1/auth/approle/login)
-CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | sed -n 's/.*"client_token":"\([^"]*\)".*/\1/p')
-
-# Fetch secret data using the client token
-SECRET_RESPONSE=$(curl --silent --header "X-Vault-Token: $CLIENT_TOKEN" \
-  https://your-vault-url/v1/secret/data/your_secret_path)
-SECRET_DATA=$(echo "$SECRET_RESPONSE" | sed -n 's/.*"data":{"data":\([^}]*\)}.*/\1/p')
-
-# Display the secret data
-echo "$SECRET_DATA"
-
-
-
-
-=========================
-#!/bin/bash
-
-# Set the variables for role ID and secret ID
-ROLE_ID="your_role_id"
-SECRET_ID="your_secret_id"
-
-# Authenticate with Vault and retrieve the client token
-AUTH_RESPONSE=$(curl --silent --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
-  https://your-vault-url/v1/auth/approle/login)
-CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | awk -F'"' '{print $10}')
-
-# Fetch secret data using the client token
-SECRET_RESPONSE=$(curl --silent --header "X-Vault-Token: $CLIENT_TOKEN" \
-  https://your-vault-url/v1/secret/data/your_secret_path)
-SECRET_DATA=$(echo "$SECRET_RESPONSE" | awk -F'"' '{print $12}')
-
-# Display the secret data
-echo "$SECRET_DATA"
-
-
-
-==============================
-
-#!/bin/bash
-
-# Set the variables for role ID and secret ID
-ROLE_ID="your_role_id"
-SECRET_ID="your_secret_id"
-
-# Authenticate with Vault and retrieve the client token
-AUTH_RESPONSE=$(curl --silent --request POST --data "{\"role_id\": \"$ROLE_ID\", \"secret_id\": \"$SECRET_ID\"}" \
-  https://your-vault-url/v1/auth/approle/login)
-CLIENT_TOKEN=$(echo "$AUTH_RESPONSE" | grep -o '"client_token":"[^"]*' | cut -d'"' -f4)
-
-# Fetch secret data using the client token
-SECRET_RESPONSE=$(curl --silent --header "X-Vault-Token: $CLIENT_TOKEN" \
-  https://your-vault-url/v1/secret/data/your_secret_path)
-SECRET_DATA=$(echo "$SECRET_RESPONSE" | grep -o '"data":{"data":{"[^}]*' | cut -d'"' -f8)
-
-# Display the secret data
-echo "$SECRET_DATA"
-
-
-==========
+import os
 import subprocess
-
-# Command to append supervisord entry to crontab
-command = '(crontab -l 2>/dev/null; echo "@reboot supervisord -c /path/to/supervisord.conf") | crontab -'
-
-# Execute the command
-subprocess.run(command, shell=True)
-
-
-
-++++++++++++++++++++++++++++++++++++
-import subprocess
-
-# Define the command to add a cron job
-command = "echo '*/5 * * * * python /path/to/script.py' | crontab -"
-
-# Execute the command in the terminal
-subprocess.call(command, shell=True)
-
-
-============================================
-
-import os
-
-# Define the cron job entry
-cron_entry = "*/5 * * * * python /path/to/script.py\n"  # Replace with the desired cron job entry
-
-# Open the crontab file in append mode
-with open('temp_cron', 'a') as file:
-    # Write the new cron job entry
-    file.write(cron_entry)
-
-# Load the updated crontab file
-os.system('crontab temp_cron')
-
-# Remove the temporary file
-os.remove('temp_cron')
-
-
-
-==================================
-import os
-
-# Define the cron job entry
-cron_entry = "*/5 * * * * python /path/to/script.py"  # Replace with the desired cron job entry
-
-# Get the current user's crontab
-os.system('crontab -l > temp_cron')
-
-# Open the temporary crontab file in append mode
-with open('temp_cron', 'a') as file:
-    # Write the new cron job entry
-    file.write(cron_entry + '\n')
-
-# Load the updated crontab from the temporary file
-os.system('crontab temp_cron')
-
-# Remove the temporary file
-os.remove('temp_cron')
-
-
-==============================
-import urllib.request
-import zipfile
-
-# URL of the file to download
-url = "https://example.com/archive.zip"  # Replace with the actual URL of the file
-
-# Path to save the downloaded file
-file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
-
-# Download the file
-urllib.request.urlretrieve(url, file_path)
-
-# Extract the downloaded file
-with zipfile.ZipFile(file_path, 'r') as zip_ref:
-    zip_ref.extractall("/path/to/extract")  # Replace with the desired extraction location
-
-
-=================================================
-
-import urllib.request
-import shutil
-import os
-import zipfile
-
-# URL of the file to download
-url = "https://example.com/archive.zip"  # Replace with the actual URL of the file
-
-# Path to save the downloaded file
-file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
-
-# Path to extract the downloaded file
-extract_path = "/path/to/extract"  # Replace with the desired extraction location
-
-# Download the file
-with urllib.request.urlopen(url) as response, open(file_path, 'wb') as out_file:
-    shutil.copyfileobj(response, out_file)
-
-# Extract the downloaded file
-with zipfile.ZipFile(file_path, 'r') as zip_ref:
-    zip_ref.extractall(extract_path)
-
-# Remove the downloaded zip file
-os.remove(file_path)
-
-
-===============================
-import urllib.request
-import os
-import zipfile
-
-# Artifactory URL and authentication credentials
-artifactory_url = "https://example.com/artifactory/repo/archive.zip"  # Replace with the actual Artifactory URL
-username = "your_username"  # Replace with your Artifactory username
-password = "your_password"  # Replace with your Artifactory password
-
-# Path to save the downloaded file
-file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
-
-# Path to extract the downloaded file
-extract_path = "/path/to/extract"  # Replace with the desired extraction location
-
-# Create a password manager and add credentials
-password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
-password_mgr.add_password(None, artifactory_url, username, password)
-
-# Create a handler with the password manager
-handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
-
-# Create an opener with the handler
-opener = urllib.request.build_opener(handler)
-
-# Install the opener
-urllib.request.install_opener(opener)
-
-# Download the file
-urllib.request.urlretrieve(artifactory_url, file_path)
-
-# Extract the downloaded file
-with zipfile.ZipFile(file_path, 'r') as zip_ref:
-    zip_ref.extractall(extract_path)
-
-# Remove the downloaded zip file
-os.remove(file_path)
-
-
-=============================
-
-import urllib.request
-import os
-import zipfile
-
-# Artifactory URL and access token
-artifactory_url = "https://example.com/artifactory/repo/archive.zip"  # Replace with the actual Artifactory URL
-access_token = "your_access_token"  # Replace with your Artifactory access token
-
-# Path to save the downloaded file
-file_path = "/path/to/save/archive.zip"  # Replace with the desired save location
-
-# Path to extract the downloaded file
-extract_path = "/path/to/extract"  # Replace with the desired extraction location
-
-# Create a password manager with the access token
-password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()
-password_mgr.add_password(None, artifactory_url, access_token, "")
-
-# Create a handler with the password manager
-handler = urllib.request.HTTPBasicAuthHandler(password_mgr)
-
-# Create an opener with the handler
-opener = urllib.request.build_opener(handler)
-
-# Install the opener
-urllib.request.install_opener(opener)
-
-# Download the file
-urllib.request.urlretrieve(artifactory_url, file_path)
-
-# Extract the downloaded file
-with zipfile.ZipFile(file_path, 'r') as zip_ref:
-    zip_ref.extractall(extract_path)
-
-# Remove the downloaded zip file
-os.remove(file_path)
-
-
-
-========================
-
-
-To obtain an access token for JFrog Artifactory, you can follow these steps:
-
-    Open your JFrog Artifactory instance in a web browser.
-    Log in to your Artifactory account with appropriate credentials.
-    Once logged in, navigate to your user profile or account settings.
-    Look for an option related to "API Keys" or "Access Tokens". The specific location may vary depending on the Artifactory version and configuration.
-    Generate a new access token by providing a name or description for the token.
-    Customize the token's permissions or scopes based on your requirements. For example, you may grant read-only or read-write access to specific repositories or actions.
-    Save or copy the generated access token. Note that some systems only display the token once, so make sure to store it securely.
-
-Once you have obtained the access token, you can use it in your Python code for authentication with the JFrog Artifactory, as shown in the previous examples. Replace the "your_access_token" placeholder with your actual access token in the code.
-
-
-
-import os
-import urllib3
-import zipfile
-
-def download_and_extract(url, destination_folder):
-    # Create the destination folder if it doesn't exist
-    if not os.path.exists(destination_folder):
-        os.makedirs(destination_folder)
-
-    # Set up the urllib3 PoolManager
-    http = urllib3.PoolManager()
-
-    # Download the file
-    file_name = os.path.join(destination_folder, url.split("/")[-1])
-    with http.request("GET", url, preload_content=False) as response, open(file_name, "wb") as out_file:
-        out_file.write(response.data)
-
-    # Extract the contents of the downloaded file
-    with zipfile.ZipFile(file_name, "r") as zip_ref:
-        zip_ref.extractall(destination_folder)
-
-    # Remove the downloaded zip file
-    os.remove(file_name)
-
-# Example usage:
-url = "https://example.com/archive.zip"
-destination_folder = "/path/to/folder"
-
-download_and_extract(url, destination_folder)
-
-
-
-===========================
-def check_crontab_entry(cron_entry):
-    try:
-        with open('/tmp/crontab_temp', 'w') as temp_file:
-            # Save the current user's crontab to a temporary file
-            os.system('crontab -l > /tmp/crontab_temp')
-
-        with open('/tmp/crontab_temp', 'r') as temp_file:
-            for line in temp_file:
-                if cron_entry in line:
-                    return True
-        return False
-    except FileNotFoundError:
-        return False
-
-def add_crontab_entry(cron_entry):
-    with open('/tmp/crontab_temp', 'a') as temp_file:
-        temp_file.write(cron_entry + '\n')
-
-    # Update the user's crontab with the temporary file
-    os.system('crontab /tmp/crontab_temp')
-
-def main():
-    # Define the cron entry to add
-    cron_entry = "@reboot supervisord -c /path/to/supervisord.conf"
-
-    # Check if the entry already exists in the crontab
-    entry_exists = check_crontab_entry(cron_entry)
-
-    if entry_exists:
-        print("Cron entry already exists. No changes needed.")
+import paramiko
+
+def connect_to_remote(hostname, port, username, password):
+    ssh_client = paramiko.SSHClient()
+    ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh_client.connect(hostname, port=port, username=username, password=password)
+    print(f"Connected to {hostname}")
+    return ssh_client
+
+def disconnect_from_remote(ssh_client):
+    if ssh_client:
+        ssh_client.close()
+        print("Disconnected from the remote host")
+
+def backup_file(port):
+    source_file = ""
+    dest_file = ""
+
+    if port == 500:
+        source_file = "/home/config/file1.txt"
+        dest_file = "/home/config/file.bkp"
+    elif port == 700:
+        source_file = "/home/config/conf.txt"
+        dest_file = "/home/config/conf.bkp"
+
+    if source_file and dest_file:
+        subprocess.run(["cp", source_file, dest_file])
+        print(f"Backup created: {source_file} -> {dest_file}")
     else:
-        # Append the cron entry to the temporary crontab file
-        add_crontab_entry(cron_entry)
-        print("Cron entry added successfully.")
+        print("Invalid port number")
 
-if __name__ == "__main__":
-    import os
-    main()
+def add_ldap_group(ssh_client):
+    ldap_group = "DYFP_MYSD_HRPA,OU=Groups,OU=DT,"
+    command = f'echo "{ldap_group}" >> /home/ldap/ro.conf'
+    ssh_client.exec_command(command)
+    print(f"LDAP group added to /home/ldap/ro.conf: {ldap_group}")
 
+def create_command_file():
+    command_content = "//create file\nuse admin\ndb.create role()\npriveleges:"
+    with open("/home/commands/first.cmd", "w") as cmd_file:
+        cmd_file.write(command_content)
+    print("Command file created: /home/commands/first.cmd")
 
-====================================
-def check_crontab_entry(cron_entry):
-    try:
-        with open('/tmp/crontab_temp', 'w') as temp_file:
-            # Save the current user's crontab to a temporary file
-            subprocess.run('crontab -l', stdout=temp_file, shell=True)
+def chmod_command_file():
+    subprocess.run(["chmod", "700", "/home/commands/first.cmd"])
+    print("Command file chmoded to 700: /home/commands/first.cmd")
 
-        with open('/tmp/crontab_temp', 'r') as temp_file:
-            for line in temp_file:
-                if cron_entry in line:
-                    return True
-        return False
-    except FileNotFoundError:
-        return False
+def execute_shell_script(ssh_client, port, role):
+    script_path = "/home/sheel/scripts/create.ksh"
+    command = f"{script_path} -p {port} -r {role}"
+    ssh_client.exec_command(command)
+    print(f"Shell script executed: {command}")
 
-def add_crontab_entry(cron_entry):
-    with open('/tmp/crontab_temp', 'a') as temp_file:
-        temp_file.write(cron_entry + '\n')
-
-    # Update the user's crontab with the temporary file
-    subprocess.run('crontab /tmp/crontab_temp', shell=True)
-
-def main():
-    # Define the cron entry to add
-    cron_entry = "@reboot supervisord -c /path/to/supervisord.conf"
-
-    # Check if the entry already exists in the crontab
-    entry_exists = check_crontab_entry(cron_entry)
-
-    if entry_exists:
-        print("Cron entry already exists. No changes needed.")
-    else:
-        # Append the cron entry to the temporary crontab file
-        add_crontab_entry(cron_entry)
-        print("Cron entry added successfully.")
-
-if __name__ == "__main__":
-    main()
-
-
---------------------------------------------
-
-def read_text_file(file_path):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        return [line.strip() for line in lines if line.strip() != '']
-
-def remove_entries_from_list(source_list, removal_list):
-    return [entry for entry in source_list if entry not in removal_list]
-
-def add_entries_to_list(source_list, entry_list):
-    return source_list + [entry for entry in entry_list if entry not in source_list]
-
-def write_list_to_file(file_path, data_list):
-    with open(file_path, 'w') as file:
-        file.write('\n'.join(data_list))
+def check_role_creation(ssh_client, port, role):
+    script_path = "/home/sheel/scripts/show_roles.ksh"
+    command = f"{script_path} -p {port} -r {role}"
+    _, stdout, _ = ssh_client.exec_command(command)
+    output = stdout.read().decode('utf-8')
+    print("Output of show_roles.ksh:")
+    print(output)
 
 def main():
-    # Define the file paths and lists
-    input_file_path = 'input.txt'
-    output_file_path = 'output.txt'
-    cron_entry = ['entry1', 'entry2', 'entry3']  # Replace with your cron_entry list
-    cron_entry_removal = ['entry2', 'entry4']    # Replace with your cron_entry_removal list
+    with open("lists.txt", "r") as file:
+        for line in file:
+            data = line.strip().split(',')
+            hostname, port, username, password = data
+            port = int(port)
 
-    # Step 1: Read the text file and create the initial list
-    file_list = read_text_file(input_file_path)
+            # Connect to remote host
+            ssh_client = connect_to_remote(hostname, port, username, password)
 
-    # Step 2: Remove entries from file_list if they exist in cron_entry_removal
-    file_list = remove_entries_from_list(file_list, cron_entry_removal)
+            # Perform activities
+            backup_file(port)
+            add_ldap_group(ssh_client)
+            create_command_file()
+            chmod_command_file()
+            execute_shell_script(ssh_client, port, "dtca")
+            check_role_creation(ssh_client, port, "dtca")
 
-    # Step 3: Add entries from cron_entry to file_list if they don't already exist
-    file_list = add_entries_to_list(file_list, cron_entry)
-
-    # Step 4: Write the updated file_list to a new file
-    write_list_to_file(output_file_path, file_list)
-
-if __name__ == "__main__":
-    main()
-
-
---------------------------------------------
-
-def read_text_file(file_path):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        return {line.strip() for line in lines if line.strip() != ''}
-
-def write_list_to_file(file_path, data_set):
-    with open(file_path, 'w') as file:
-        file.write('\n'.join(data_set))
-
-def main():
-    # Define the file paths and sets
-    input_file_path = 'input.txt'
-    output_file_path = 'output.txt'
-    cron_entry = {'entry1', 'entry2', 'entry3'}  # Replace with your cron_entry set
-    cron_entry_removal = {'entry2', 'entry4'}    # Replace with your cron_entry_removal set
-
-    # Step 1: Read the text file and create the initial set
-    file_set = read_text_file(input_file_path)
-
-    # Step 2: Remove entries from file_set if they exist in cron_entry_removal
-    file_set -= cron_entry_removal
-
-    # Step 3: Add entries from cron_entry to file_set if they don't already exist
-    file_set |= cron_entry
-
-    # Step 4: Write the updated file_set to a new file
-    write_list_to_file(output_file_path, file_set)
-
-if __name__ == "__main__":
-    main()
-
---------------------------------------------
-
-def read_text_file(file_path):
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-        return {line.strip() for line in lines if line.strip() != ''}
-
-def write_list_to_file(file_path, data_set):
-    with open(file_path, 'w') as file:
-        file.write('\n'.join(data_set))
-
-def main():
-    # Define the file paths and sets
-    input_file_path = 'input.txt'
-    output_file_path = 'output.txt'
-    cron_entry = {'entry1', 'entry2', 'entry3'}  # Replace with your cron_entry set
-    cron_entry_removal = {'entry2', 'entry4'}    # Replace with your cron_entry_removal set
-
-    # Step 1: Read the text file and create the initial set
-    file_set = read_text_file(input_file_path)
-
-    # Step 2: Remove entries from file_set if they exist in cron_entry_removal
-    file_set -= cron_entry_removal
-
-    # Step 3: Add entries from cron_entry to file_set if they don't already exist
-    file_set |= cron_entry
-
-    # Step 4: Write the updated file_set to a new file
-    write_list_to_file(output_file_path, file_set)
+            # Disconnect from remote host
+            disconnect_from_remote(ssh_client)
 
 if __name__ == "__main__":
     main()
 
 
----------------------------------------------
 
-*****************************************************************
-import subprocess
+import configparser
 
-def execute_and_log_command(command):
-    try:
-        # Execute the command and capture the output and errors
-        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        
-        # Log the command output and errors
-        with open('command_log.txt', 'a') as log_file:
-            log_file.write(f"Command: {command}\n")
-            log_file.write(f"Exit Code: {result.returncode}\n")
-            log_file.write(f"Output:\n{result.stdout}\n")
-            log_file.write(f"Errors:\n{result.stderr}\n")
-            log_file.write('=' * 50 + '\n')
+def compare_config_files(file1, file2):
+    config1 = configparser.ConfigParser()
+    config2 = configparser.ConfigParser()
 
-        return result.returncode, result.stdout, result.stderr
-    except Exception as e:
-        return -1, None, str(e)
+    config1.read(file1)
+    config2.read(file2)
 
-# Define the system command to execute
-command = "ps -ef -u edapi | grep python | grep udafdbi | awk '{print $2}' | xargs kill -9"
+    sections1 = set(config1.sections())
+    sections2 = set(config2.sections())
 
-# Execute the command and log the output
-exit_code, stdout, stderr = execute_and_log_command(command)
+    common_sections = sections1.intersection(sections2)
+    different_sections = sections1.symmetric_difference(sections2)
 
-if exit_code == 0:
-    print("Command executed successfully!")
-else:
-    print("Command execution failed. Check the log for details.")
+    print("Common Sections:")
+    print(common_sections)
+    print("\nDifferent Sections:")
+    print(different_sections)
 
+    for section in common_sections:
+        options1 = set(config1.options(section))
+        options2 = set(config2.options(section))
 
----------------------------------------
+        common_options = options1.intersection(options2)
+        different_options = options1.symmetric_difference(options2)
 
-import subprocess
+        print(f"\nSection: {section}")
+        print("Common Options:")
+        print(common_options)
+        print("Different Options:")
+        print(different_options)
 
-def execute_and_print_command(command):
-    try:
-        # Execute the command and capture the output
-        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        
-        # Print the command output
-        print("Command Output:")
-        print(result.stdout)
-        
-        if result.returncode == 0:
-            print("Command executed successfully!")
-        else:
-            print("Command execution failed.")
-        
-        # Print any errors
-        if result.stderr:
-            print("Errors:")
-            print(result.stderr)
-            
-    except Exception as e:
-        print("An error occurred:", str(e))
+        for option in common_options:
+            value1 = config1.get(section, option)
+            value2 = config2.get(section, option)
 
-# Define the system command to execute
-command = "ps -ef -u edapi | grep python | grep udafdbi | awk '{print $2}' | xargs kill -9"
+            if value1 != value2:
+                print(f"Difference in value for option '{option}':")
+                print(f"  {file1}: {value1}")
+                print(f"  {file2}: {value2}")
 
-# Execute the command and print the output
-execute_and_print_command(command)
+if __name__ == "__main__":
+    file1_path = "config1.ini"
+    file2_path = "config2.ini"
 
-
-
-
-
-
-
-import json
-
-# Specify the path to the JSON file
-json_file_path = r'C:\WORK\Lang\Python\CodePractise\Python\config\config.json'
-
-# Read JSON data from the file
-with open(json_file_path, 'r') as json_file:
-    config_data = json.load(json_file)
-
-# Access and print the values
-key1_value = config_data['key1']
-key2_value = config_data['key2']
-key3_name = config_data['key3']['name']
-key3_email = config_data['key3']['email']
-key3 = config_data['key3']
-
-print("Key1:", key1_value)
-print("Key2:", key2_value)
-print("Key3 - Name:", key3_name)
-print("Key3 - Email:", key3_email)
-print(key3)
-
-{
-    "key1": "value1",
-    "key2": ["value2"],
-    "key3": {
-        "name": "ash",
-        "email": "ash@g.com"
-    }
-}
-
-
-
-Slide 2: Key Concepts
-
-Title: Fundamentals of REST and SQLAlchemy
-
-In this section, we'll lay the foundation by understanding the key concepts of REST (Representational State Transfer) and SQLAlchemy, which form the backbone of our journey into building powerful Python REST APIs.
-
-Understanding REST:
-
-    REST, or Representational State Transfer, is an architectural style for designing networked applications.
-    It emphasizes stateless communication, resource-based interactions, and the use of standard HTTP methods (GET, POST, PUT, DELETE).
-    RESTful APIs are built around resources, each uniquely identified by a URL.
-
-The Role of SQLAlchemy:
-
-    SQLAlchemy is a Python library that serves as an Object-Relational Mapping (ORM) tool.
-    It bridges the gap between object-oriented programming and relational databases.
-    With SQLAlchemy, we work with databases using Python classes and objects, making database interactions more intuitive and efficient.
-
-Why These Concepts Matter:
-
-    A strong grasp of REST principles is essential for designing APIs that are intuitive, scalable, and easy to maintain.
-    SQLAlchemy empowers us to work with databases in a Pythonic way, making it an indispensable tool for modern web development.
-	
-	
-	
-	Slide 4: Python REST API vs. Low Code
-
-Title: Python REST API vs. Low Code
-
-In this section, we'll compare Python-based REST APIs with low-code alternatives, emphasizing Python's flexibility and customization. We'll also conclude with the importance of understanding REST, Python, and SQLAlchemy in modern software development.
-
-Python REST API - Flexibility and Customization:
-
-    Python empowers developers with fine-grained control over every aspect of their REST APIs.
-    Flexibility: Python allows for custom logic, intricate data processing, and integration with a wide range of libraries and services.
-    Customization: Developers can tailor APIs to meet specific project requirements, making Python ideal for complex applications.
-
-Low Code - Simplified Development:
-
-    Low-code platforms provide pre-built components and visual interfaces for rapid application development.
-    Simplified Development: They are perfect for quick prototypes and simple applications with less need for customization.
-    Trade-off: While low-code tools excel in simplicity, they may limit flexibility and customization for more complex use cases.
-
-Concluding Thoughts:
-
-    Understanding REST, Python, and SQLAlchemy is crucial in modern software development.
-    Python-based REST APIs offer unmatched flexibility and customization for complex projects.
-    Low-code platforms are excellent for rapid development but may have limitations in highly customized or intricate applications.
-
-In the subsequent sections of this presentation, we will delve deeper into Python, SQLAlchemy, and practical implementation of REST APIs to showcase the power and versatility of this approach.
-
-
-from collections import defaultdict
-
-def merge_products_and_offerings(product_json, offer_json):
-    # Create a dictionary to store products and their corresponding offerings
-    product_offerings = defaultdict(list)
-
-    # Populate the dictionary with products from product_json
-    for product in product_json:
-        product_id_key = next((key for key in product if key.lower() == 'product_id'), None)
-        if product_id_key:
-            product_id = product[product_id_key]
-            product_offerings[product_id].append(product)
-
- 
-    
-    # Merge offerings from offer_json into the dictionary
-    for offer in offer_json:
-        product_id_key = next((key for key in offer if key.lower() == 'product_id'), None)
-        if product_id_key:
-            product_id = offer[product_id_key]
-            product = product_offerings.get(product_id)
-            if product is not None:
-                product[0].setdefault('offerings', []).append({
-                    key: offer[key] for key in offer if key.lower() in ['product_id', 'offering_id', 'name', 'description', 'alias', 'product_alias']
-                })
-
-    print(product_offerings)
-    
-    # Convert the dictionary values to a list to get the final_output
-    final_output = []
-    for products in product_offerings.values():
-        final_product = products[0].copy()
-        final_product.setdefault('offerings', [])
-        for product in products:
-            final_product['offerings'].extend(product.get('offerings', []))
-        final_output.append(final_product)
-
-    return final_output
-
-
-
-from collections import defaultdict
-
-def merge_products_and_offerings(product_json, offer_json):
-    # Create a dictionary to store products and their corresponding offerings
-    product_offerings = defaultdict(list)
-
-    # Merge products from product_json
-    for product in product_json:
-        product_id = product.get('product_id', None)
-        if product_id:
-            product_offerings[product_id].append(product)
-
-    # Merge offerings from offer_json
-    for offer in offer_json:
-        product_id = offer.get('product_id', None)
-        if product_id:
-            product_offerings[product_id][0].setdefault('offerings', []).append({
-                key: value for key, value in offer.items() if key.lower() in ['product_id', 'offering_id', 'name', 'description', 'alias', 'product_alias']
-            })
-
-    # Convert the dictionary values to a list to get the final_output
-    final_output = [
-        {**product[0], 'offerings': product[0].get('offerings', [])}
-        for product in product_offerings.values()
-    ]
-
-    return final_output
-
-# Rest of the code remains the same
+    compare_config_files(file1_path, file2_path)
