@@ -283,3 +283,57 @@ if __name__ == "__main__":
         print(differ(file1_path, file2_path))
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+
+
+
+
+
+
+
+import os
+import shutil
+from datetime import datetime
+
+def manage_file(file_path):
+    # Define folder names
+    bak_folder = 'bak'
+    storage_folder = 'storage'
+    
+    # Create folders if they do not exist
+    os.makedirs(bak_folder, exist_ok=True)
+    os.makedirs(storage_folder, exist_ok=True)
+    
+    # Get the filename from the file path
+    filename = os.path.basename(file_path)
+    print(filename)
+    
+    # Paths for storage and backup files
+    storage_file_path = os.path.join(storage_folder, filename)
+    print(storage_file_path)
+    backup_files_pattern = os.path.join(bak_folder, f"{filename}*")
+    print(backup_files_pattern)
+    
+    if os.path.exists(storage_file_path):
+        # Find all backups of this file
+        backups = [f for f in os.listdir(bak_folder) if f.startswith(filename)]
+        backups.sort()  # Oldest files first due to lexicographical sort
+
+        # Check and delete the oldest backup if there are already 3 backups
+        if len(backups) >= 3:
+            os.remove(os.path.join(bak_folder, backups[0]))
+
+        # Create a new backup
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        backup_file_path = os.path.join(bak_folder, f"{filename}.{timestamp}")
+        shutil.copy2(storage_file_path, backup_file_path)
+
+        # Overwrite the file in storage with the input file
+        shutil.copy2(file_path, storage_file_path)
+    else:
+        # If the file is not present in storage, store it
+        shutil.copy2(file_path, storage_file_path)
+
+# Example usage
+manage_file(r'C:\WORK\Lang\Python\CodePractise\new.env')
